@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QMainWindow
 
 from domain.interactor import INTERACTOR
 from widgets.logger import LoggerWidget
+from widgets.toolbar import Toolbar
 
 
 class MainWindow(QMainWindow):
@@ -51,7 +52,70 @@ class MainWindow(QMainWindow):
         self._SetStatusBar()
 
     def _SetToolBar(self):
-        pass
+        """
+        Настраивает ToolBar основного окна.
+        Создает кнопки. Привязывает события.
+        :return:
+        """
+        self.TOOLBAR = Toolbar(
+            default_ico=QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'question-mark_24.png')))
+
+        # База
+        self.TOOLBAR.add_group("База")
+
+        self.TOOLBAR.add_item(self._open_db,
+                              "База",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'folder_32.png')),
+                              'Открыть')
+
+        self.TOOLBAR.add_item(lambda: print("[ running saving file script ]\t{ not implemented }"),
+                              "База",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'diskette_32.png')),
+                              'Сохранить')
+
+        self.TOOLBAR.add_item(lambda: print("[ running change_user file script ]\t{ not implemented }"),
+                              "База",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'change_32.png')),
+                              'Сменить пользователя')
+
+        self.TOOLBAR.add_item(lambda: print("[ running opening file script ]\t{ not implemented }"),
+                              "База",
+                              # QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'database_export_32.png')),
+                              description='Открыть')
+
+        # Модули
+        self.TOOLBAR.add_group("Модули")
+
+        self.TOOLBAR.add_item(lambda: print("[ running Назначение file script ]\t{ not implemented }"),
+                              "Модули",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'target_32.png')),
+                              'Назначение')
+
+        self.TOOLBAR.add_item(lambda : print('implement me'),#self._normalization,
+                              "Модули",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'fuel_32.png')),
+                              'Нормирование')
+
+        self.TOOLBAR.add_item(self._norm_template_provide,
+                              # lambda: self.interactor.UsersLogger('IMPLEMENT ME!', 'error'),
+                              "Модули",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'edit-tools32.png')),
+                              'Создать норму')
+
+        # Экспорт
+        self.TOOLBAR.add_group("Экспорт")
+
+        self.TOOLBAR.add_item(lambda: print("[ running Экспорт xlsx file script ]\t{ not implemented }"),
+                              "Экспорт",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'xls32.png')),
+                              'Экспорт XLSX')
+
+        self.TOOLBAR.add_item(lambda: print("[ running Печать file script ]\t{ not implemented }"),
+                              "Экспорт",
+                              QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'printer32.png')),
+                              'Печать')
+
+        self.addToolBar(self.TOOLBAR)
 
     def _SetMenuBar(self):
         pass
@@ -68,4 +132,8 @@ class MainWindow(QMainWindow):
     def _SetStatusBar(self):
         pass
         
-    
+    def _open_db(self):
+        ...
+
+    def _norm_template_provide(self):
+        ...
