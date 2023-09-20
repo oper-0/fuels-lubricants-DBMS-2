@@ -2,12 +2,14 @@ import os
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget
+from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget, QHBoxLayout
 
 from domain.interactor import INTERACTOR
 from infrastructure.types import ObjectBrowserAssets
 from widgets.db_files_browser import DBFilesBrowser
+from widgets.dock_area import DockArea
 from widgets.logger import LoggerWidget
+from widgets.main_table_widget import MainTableWidget
 from widgets.norm_template_provider import NormTemplateProviderStartWindow
 from widgets.status_bar import StatusBar
 from widgets.toolbar import Toolbar
@@ -157,10 +159,25 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.LEFT_DOCK_AREA)
 
     def _SetCentralWidget(self):
-        pass
+        self.CENTRAL_TABLE_WIDGET = MainTableWidget()
+        self.setCentralWidget(self.CENTRAL_TABLE_WIDGET)
 
     def _SetBotDockArea(self):
-        pass
+        self.BOT_DOCK_AREA = QDockWidget()
+        docker_widget = DockArea(self.LOGGER)
+
+        layout = QHBoxLayout()
+
+        layout.addWidget(docker_widget)
+
+        # dockerWidget = QWidget()
+        self.BOT_DOCK_AREA.setWidget(docker_widget)
+        # dockerWidget.setLayout(layout)
+
+        # self.BOT_DOCK_AREA.setWidget(lw)
+        self.BOT_DOCK_AREA.setFloating(True)
+        self.BOT_DOCK_AREA.setTitleBarWidget(QWidget(None))
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.BOT_DOCK_AREA)
 
     def _SetStatusBar(self):
         self.STATUS_BAR = StatusBar(
