@@ -120,7 +120,18 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.TOOLBAR)
 
     def _SetMenuBar(self):
-        pass
+        """
+        Настраивает MenuBar.
+        Создает элементы MenuBar'a. Привязывает события.
+        """
+        self.MENU_BAR = self.menuBar()
+        self.MENU_BAR.setNativeMenuBar(False)
+
+        file_menu = self.MENU_BAR.addMenu("Файл")
+        main_menu = self.MENU_BAR.addMenu("Главная")
+        make_menu = self.MENU_BAR.addMenu("Создание")
+        export_menu = self.MENU_BAR.addMenu("Внешние данные")
+
 
     def _SetLeftDockArea(self):
         pass
