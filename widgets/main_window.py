@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QMainWindow
 from domain.interactor import INTERACTOR
 from widgets.logger import LoggerWidget
 from widgets.norm_template_provider import NormTemplateProviderStartWindow
+from widgets.status_bar import StatusBar
 from widgets.toolbar import Toolbar
 
 
@@ -131,7 +132,10 @@ class MainWindow(QMainWindow):
         pass
 
     def _SetStatusBar(self):
-        pass
+        self.STATUS_BAR = StatusBar(
+            ico_db_connected_path=os.path.join(self.interactor.paths.abs_icons_dir, 'db_ok_24.png'),
+            ico_db_disconnected_path=os.path.join(self.interactor.paths.abs_icons_dir, 'db_notok_24.png'))
+        self.setStatusBar(self.STATUS_BAR)
         
     def _open_db(self):
         ...
