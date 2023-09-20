@@ -9,7 +9,7 @@ class SQLITE_TABLES(NamedTuple):
     UNITS = 'Unit'
 
 
-class database(DbInterface):
+class SqliteDatabase(DbInterface):
 
     def __init__(self, filename: str):
         self.database_path = filename

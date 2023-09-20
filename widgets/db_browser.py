@@ -15,14 +15,17 @@ from widgets.list_tree_widget import ListTreeWidget_1
 
 class DbBrowser(QDialog):
 
-    def __init__(self, db: DbInterface,
+    def __init__(self, db: DbInterface,  # db access throw model
                  icons_dir: str,
+                 exporter_fn: typing.Callable[[list], None],
                  ):
         super().__init__()
         self.db = db
+        self.icons_dir = icons_dir
+        self.exporter_fn = exporter_fn
+
         self.search_results = None
         self.setModal(True)
-        self.icons_dir = icons_dir
         self.setWindowIcon(QIcon(os.path.join(self.icons_dir, r'databasesearch32.png')))
         self.combos: list[QComboBox] = []
         self.edits: list[ClickableLineEdit] = []
@@ -208,13 +211,9 @@ class DbBrowser(QDialog):
         # self.search_results_tree.get_table()
         # pass
         checked_search_tree_items = self.search_results_tree.get_checked_data()
-        self.interactor.dataPipe = checked_search_tree_items  # todo self.search_results_tree.get_table() must be used and insert only checked records
+        self.exporter_fn(checked_search_tree_items)  # todo self.search_results_tree.get_table() must be used and insert only checked records
         self.search_results_tree.uncheck_all()
         self.close()
-
-    # def show(self):
-    #     super().show()
-    #     self.interactor.dataPipe = []
 
 
 

@@ -222,7 +222,8 @@ class MainWindow(QMainWindow):
         if not self.RIGHT_DOCK_AREA:
             return
         self.RIGHT_DOCK_AREA.setWidget(DbBrowser(self.interactor.WorkingRepository,
-                                                 self.interactor.paths.abs_icons_dir))
+                                                 self.interactor.paths.abs_icons_dir,
+                                                 exporter_fn=lambda args: self.interactor.UsersLogger("Implement me!")))
         # self.RIGHT_DOCK_AREA.adjustSize()
         self.RIGHT_DOCK_AREA.show()
         # self._SetRightDockArea(self.WINDOW_NORMALIZATION_MODUL)
