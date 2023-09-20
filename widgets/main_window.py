@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget, QHBoxLayout
 
 from domain.interactor import INTERACTOR
 from infrastructure.types import ObjectBrowserAssets
+from widgets.choose_db_file import OpenDBFileWindow
 from widgets.db_files_browser import DBFilesBrowser
 from widgets.dock_area import DockArea
 from widgets.logger import LoggerWidget
@@ -186,7 +187,15 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.STATUS_BAR)
         
     def _open_db(self):
-        ...
+        OpenDBFileWindow(self.interactor)
+
+        if not self.interactor.WorkingRepository:
+            self.STATUS_BAR.setDBStatus_disconnected()
+            return
+
+        tmp = self.interactor.WorkingRepository.get_db_structure()
+        self.dbTablesWidget.update_data(self.interactor.WorkingRepository.get_db_structure())
+        self.STATUS_BAR.setDBStatus_connected()
 
     def _norm_template_provide(self):
         self.interactor.UsersLogger('Запуск модуля "Шаблоны норм расхода"', 'info')
