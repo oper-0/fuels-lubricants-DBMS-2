@@ -16,9 +16,7 @@ class InMemoryDB(DbInterface):
 
         # Data population:
         self.write(generate_pivot_61(os.path.join(tmp_dir_path,
-                                                  'pivot_records.csv')))  # ON WINDOWS r'C:\Users\4NR_Operator_34\PycharmProjects\fuels-lubricants-DBMS\source\Infrastructure\Repositories\InMemory_normDB\pivot_records.csv'
-        # self.write(inMemUtils.generate_pivot_61(r'C:\Users\Public\kasimov\dev\0\fuels-lubricants-DBMS\source\Infrastructure\Repositories\InMemory_normDB\pivot_records.csv')) # ON WINDOWS
-        # self.write(inMemUtils.generate_pivot_61(r'/home/sanakan/PycharmProjects/fuels-lubricants-DBMS/source/Infrastructure/Repositories/InMemory_normDB/pivot_records.csv')) # ON LINUX!!!
+                                                  'pivot_records.csv')))
 
     def get_headers(self) -> list[str]:
         rez = []
