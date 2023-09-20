@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QMainWindow
 
 from domain.interactor import INTERACTOR
 from widgets.logger import LoggerWidget
+from widgets.norm_template_provider import NormTemplateProviderStartWindow
 from widgets.toolbar import Toolbar
 
 
@@ -136,4 +137,7 @@ class MainWindow(QMainWindow):
         ...
 
     def _norm_template_provide(self):
-        ...
+        self.interactor.UsersLogger('Запуск модуля "Шаблоны норм расхода"', 'info')
+        self.WINDOW_NORM_TEMPLATE_PROVIDER = NormTemplateProviderStartWindow(self.interactor.paths.abs_templates_dir,
+                                                                             self.interactor.paths.abs_icons_dir)
+        self.WINDOW_NORM_TEMPLATE_PROVIDER.show()
