@@ -1,9 +1,12 @@
 import os
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget
 
 from domain.interactor import INTERACTOR
+from infrastructure.types import ObjectBrowserAssets
+from widgets.db_files_browser import DBFilesBrowser
 from widgets.logger import LoggerWidget
 from widgets.norm_template_provider import NormTemplateProviderStartWindow
 from widgets.status_bar import StatusBar
@@ -134,7 +137,24 @@ class MainWindow(QMainWindow):
 
 
     def _SetLeftDockArea(self):
-        pass
+        self.LEFT_DOCK_AREA = QDockWidget()
+
+        assets = ObjectBrowserAssets()
+        assets.search_ico = QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'search_ico_16.png'))
+        assets.arrow_ico = QIcon(
+            os.path.join(self.interactor.paths.abs_icons_dir, 'down-filled-triangular-arrow_16.png'))
+        assets.norms_ico = QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'stats32.png'))
+        assets.folder_ico = QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'folder-horizontal32.png'))
+
+        self.dbTablesWidget = DBFilesBrowser(assets)
+
+        if self.interactor.WorkingRepository:
+            self.dbTablesWidget.update_data(self.interactor.WorkingRepository.get_db_structure())
+
+        self.LEFT_DOCK_AREA.setWidget(self.dbTablesWidget)
+        self.LEFT_DOCK_AREA.setFloating(True)
+        self.LEFT_DOCK_AREA.setTitleBarWidget(QWidget(None))
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.LEFT_DOCK_AREA)
 
     def _SetCentralWidget(self):
         pass
