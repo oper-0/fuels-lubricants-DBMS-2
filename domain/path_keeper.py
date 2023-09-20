@@ -4,7 +4,7 @@ class PathKeeper(object):
     abs_default_repositories_dir: str = ''  # абсолютный путь (по умолчанию) до директории с базами
     abs_docs_export_dir: str = ''  # абсолютный путь (по умолчанию) до директории для экспорта документов
     abs_templates_dir: str = ''  # абсолютный путь (по умолчанию) до директории с шаблонами документов
-
+    abs_temporary_files_dir: str = ''  # абсолютный путь (по умолчанию) до директории с временными файлами
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(PathKeeper, cls).__new__(cls)

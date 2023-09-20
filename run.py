@@ -24,6 +24,7 @@ def load_app():
     paths.abs_default_repositories_dir = os.path.join(cwd, 'databases')
     paths.abs_docs_export_dir = os.path.join(cwd, 'locals', 'docs')
     paths.abs_templates_dir = os.path.join(cwd, 'locals', 'templates')
+    paths.abs_temporary_files_dir = os.path.join(cwd, 'tmp')
     interactor.paths = paths
 
     # explicit reassignment of the value for clarity, the value will be assigned after opening the db and validating it

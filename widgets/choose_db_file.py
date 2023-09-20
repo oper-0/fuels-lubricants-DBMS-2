@@ -5,6 +5,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QFileDialog, QApplication
 
 from domain.interactor import INTERACTOR
+from models.in_memori_db import InMemoryDB
 
 
 class OpenDBFileWindow(QFileDialog):
@@ -38,4 +39,4 @@ class OpenDBFileWindow(QFileDialog):
             return
 
         # self.interactor.WorkingRepository = Sqlite_normDB.database(filename)
-        # self.interactor.WorkingRepository = InMemoryDB() # TODO implement repo - inject dependency
+        self.interactor.WorkingRepository = InMemoryDB(tmp_dir_path=self.interactor.paths.abs_temporary_files_dir) # TODO implement repo - inject dependency
