@@ -2,11 +2,12 @@ import os
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QDockWidget, QWidget, QHBoxLayout, QLabel
 
 from domain.interactor import INTERACTOR
 from infrastructure.types import ObjectBrowserAssets
 from widgets.choose_db_file import OpenDBFileWindow
+from widgets.db_browser import DbBrowser
 from widgets.db_files_browser import DBFilesBrowser
 from widgets.dock_area import DockArea
 from widgets.logger import LoggerWidget
@@ -54,7 +55,7 @@ class MainWindow(QMainWindow):
         self._SetToolBar()
         self._SetMenuBar()
         self._SetLeftDockArea()
-        # self._SetRightDockArea()
+        self._SetRightDockArea()
         self._SetCentralWidget()
         self._SetBotDockArea()
         self._SetStatusBar()
@@ -99,7 +100,7 @@ class MainWindow(QMainWindow):
                               QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'target_32.png')),
                               'Назначение')
 
-        self.TOOLBAR.add_item(lambda : print('implement me'),#self._normalization,
+        self.TOOLBAR.add_item(self._normalization,
                               "Модули",
                               QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'fuel_32.png')),
                               'Нормирование')
@@ -137,6 +138,16 @@ class MainWindow(QMainWindow):
         main_menu = self.MENU_BAR.addMenu("Главная")
         make_menu = self.MENU_BAR.addMenu("Создание")
         export_menu = self.MENU_BAR.addMenu("Внешние данные")
+
+
+    def _SetRightDockArea(self):
+        self.RIGHT_DOCK_AREA = QDockWidget()
+
+        # self.RIGHT_DOCK_AREA.setWidget(self.dbTablesWidget)
+        self.RIGHT_DOCK_AREA.setFloating(True)
+        self.RIGHT_DOCK_AREA.setTitleBarWidget(QWidget(None))
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.RIGHT_DOCK_AREA)
+        self.RIGHT_DOCK_AREA.hide()
 
 
     def _SetLeftDockArea(self):
@@ -202,3 +213,17 @@ class MainWindow(QMainWindow):
         self.WINDOW_NORM_TEMPLATE_PROVIDER = NormTemplateProviderStartWindow(self.interactor.paths.abs_templates_dir,
                                                                              self.interactor.paths.abs_icons_dir)
         self.WINDOW_NORM_TEMPLATE_PROVIDER.show()
+
+    def _normalization(self):
+        if not self.interactor.WorkingRepository:
+            self.interactor.UsersLogger('База данных не подключена. Невозможно открыть модуль "Нормирование"', 'error')
+            return
+        self.interactor.UsersLogger('Запуск модуля "Нормирование"', 'info')
+        if not self.RIGHT_DOCK_AREA:
+            return
+        self.RIGHT_DOCK_AREA.setWidget(DbBrowser(self.interactor.WorkingRepository,
+                                                 self.interactor.paths.abs_icons_dir))
+        # self.RIGHT_DOCK_AREA.adjustSize()
+        self.RIGHT_DOCK_AREA.show()
+        # self._SetRightDockArea(self.WINDOW_NORMALIZATION_MODUL)
+        # self.CENTRAL_TABLE_WIDGET.add_tab(self.WINDOW_NORMALIZATION_MODUL, 'Нормирование')
