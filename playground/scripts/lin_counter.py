@@ -4,7 +4,7 @@ script for counting number of code lines
 
 from pathlib import Path
 
-directory = Path(r'C:\Users\4NR_Operator_34\Favorites\chernika-34\dev\SW\normGSM\0\fuels-lubricants-DBMS')
+directory = Path(r'C:\Users\4NR_Operator_34\PycharmProjects\fuels-lubricants-DBMS-2')
 line_count = 0
 c = 0
 for f in directory.rglob('*.py'):

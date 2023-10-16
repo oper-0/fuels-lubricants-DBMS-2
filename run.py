@@ -31,7 +31,7 @@ def load_app():
     interactor.WorkingRepository = None
 
     app = QApplication(sys.argv)
-    loadWindow = LoadWin(os.path.join(interactor.paths.abs_icons_dir, 'andrew-theophilopoulos-link (1).jpg'))
+    loadWindow = LoadWin(os.path.join(interactor.paths.abs_icons_dir, 'logo_25gosnii.png'))
     app.processEvents()
     main_window = MainWindow(interactor)
     loadWindow.close()

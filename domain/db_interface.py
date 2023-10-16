@@ -2,9 +2,16 @@ from abc import ABC, abstractmethod
 
 
 class DbInterface(ABC):
+    @abstractmethod
+    def get_alias(self, key: str) -> str:
+        """
+        returns an alias for the column name.
+        Example: 'norm_name' -> 'Norm_61', 'expiring_date' -> 'срок истечения'
+        """
+        ...
 
     @abstractmethod
-    def get_headers(self) -> list[str]:
+    def get_headers(self, table_name: str) -> list[str]:
         """
         returns list of all existing headers(showing aliases) in db (for every table).
         Example: ['ID', 'ОВУ', 'Наименование изделия', 'Шифр изделия', 'Базовое шасси', 'ДВС', etc..]

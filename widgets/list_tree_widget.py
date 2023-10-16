@@ -2,6 +2,7 @@ import os
 import random
 import sys
 from datetime import datetime
+from typing import Callable
 
 import PyQt6
 from PyQt6 import QtCore
@@ -10,16 +11,16 @@ from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem, QHeaderView, QTableWidgetItem, QTableWidget, QHBoxLayout, \
     QWidget, QApplication
 
-from models.in_memory_db_helpers import NORM_FIELD_DICTIONARY
+# from models.in_memory_db_helpers import NORM_FIELD_DICTIONARY
 
 
 class ListTreeWidget_1_Item(QTreeWidgetItem):
 
-    def __init__(self, obj, *__args, data, table_icon):
+    def __init__(self, obj, *__args, data, table_icon, get_alias_by_key: Callable[[str], str]):
         super().__init__(obj, *__args)
         self.data = data
         self.icon = table_icon
-        self.NORM_FIELD_DICTIONARY = NORM_FIELD_DICTIONARY
+        self.get_alias = get_alias_by_key
 
         self.color_expired = QColor(255, 153, 153)
         # self.color_expiring = QColor(255, 255, 153)
@@ -28,24 +29,25 @@ class ListTreeWidget_1_Item(QTreeWidgetItem):
         column_counter = 0
         for k, v in self.data.items():
             if isinstance(v, dict):
-                self.setBackground(column_counter, self.date_color_validate(v['expiring_date']))
-                if v['norm_name'][-3:] in ['[П]', '[В]']:
+                # self.setBackground(column_counter, self.date_color_validate(v['expiring_date']))
+                self.setBackground(column_counter, self.date_color_validate(v[self.get_alias('expiring_date')]))
+                if v[self.get_alias('norm_name')][-3:] in ['[П]', '[В]']:
                     column_counter += 1
                     continue
                 if self.background(column_counter) != self.color_expired:
-                    v['norm_name'] = v['norm_name'] + ' ' + random.choice(['[П]', '[В]'])
-                    self.setText(column_counter, v['norm_name'])
+                    v[self.get_alias('norm_name')] = v[self.get_alias('norm_name')] + ' ' + random.choice(['[П]', '[В]'])
+                    self.setText(column_counter, v[self.get_alias('norm_name')])
                 else:
-                    v['norm_name'] = v['norm_name'] + ' ' + '[В]'
-                    self.setText(column_counter, v['norm_name'])
+                    v[self.get_alias('norm_name')] = v[self.get_alias('norm_name')] + ' ' + '[В]'
+                    self.setText(column_counter, v[self.get_alias('norm_name')])
                 # self.setForeground(column_counter, QBrush(QColor(0, 0, 0)))
             column_counter += 1
 
     def date_color_validate(self, date: str) -> QColor:
-        if datetime.strptime(date, '%d/%m/%Y').year > datetime.today().year:
+        if datetime.strptime(date, '%Y-%m-%d').year > datetime.today().year:
             return self.color_last  # срок выйдет ток в след году (только не используйте 31 декабря)
-        elif datetime.strptime(date, '%d/%m/%Y').year == datetime.today().year and datetime.strptime(
-                date, '%d/%m/%Y') > datetime.today():
+        elif datetime.strptime(date, '%Y-%m-%d').year == datetime.today().year and datetime.strptime(
+                date, '%Y-%m-%d') > datetime.today():
             return self.color_expiring  # срок истекает в этом году
         else:
             return self.color_expired  # срокистек уже
@@ -60,7 +62,7 @@ class ListTreeWidget_1_Item(QTreeWidgetItem):
         values = list(data.values())
 
         self.dialog = QWidget()
-        self.dialog.setWindowTitle(values[column]['norm_name'])
+        self.dialog.setWindowTitle(values[column][self.get_alias('norm_name')])
         self.dialog.setWindowIcon(self.icon)
         # self.dialog
         layout = QHBoxLayout()
@@ -71,7 +73,8 @@ class ListTreeWidget_1_Item(QTreeWidgetItem):
         # self.table.setRowCount(1)
         self.table.setColumnCount(1)
         self.table.setRowCount(len(data[keys[column]].values()))  # i know, i know ( ´･･)ﾉ(._.`)
-        self.table.setVerticalHeaderLabels(list(self.NORM_FIELD_DICTIONARY.keys()))
+        # self.table.setVerticalHeaderLabels(list(self.NORM_FIELD_DICTIONARY.keys()))
+        self.table.setVerticalHeaderLabels(list(self.data[self.get_alias('unit_fuel_consumption')]))
         col_count = 0
         for key, val in data[keys[column]].items():
             cur_var = ''
@@ -84,7 +87,7 @@ class ListTreeWidget_1_Item(QTreeWidgetItem):
 
             table_item = QTableWidgetItem(cur_var)
 
-            if key == 'expiring_date':
+            if key in ['expiring_date', self.get_alias('expiring_date')]:
                 table_item.setBackground(self.date_color_validate(val))
                 # table_item.setForeground(QBrush(QColor(0, 0, 0)))
 
@@ -102,12 +105,13 @@ class ListTreeWidget_1_Item(QTreeWidgetItem):
 
 class ListTreeWidget_1(QTreeWidget):
 
-    def __init__(self, icon_dir):
+    def __init__(self, icon_dir, get_alias_by_key: Callable[[str], str]):
         super().__init__()
 
         self.icon_dir = icon_dir
         self.items: list[QTreeWidgetItem] = []
         self.table_icon = QIcon(os.path.join(self.icon_dir, r'stats32.png'))
+        self.get_alias_by_key = get_alias_by_key
 
         self.itemClicked.connect(self.onItemClicked)
 
@@ -118,13 +122,18 @@ class ListTreeWidget_1(QTreeWidget):
         self.clear()
         self.clear_items()
 
-        headers = []
-        for item in data:
-            headers = headers+list(item)
-        headers = set(headers)
+        # headers = []
+        # for item in data:
+        #     headers = headers+list(item)
+        # headers = set(headers)
+        if data[0]:
+            headers = list(data[0].keys())
+        else:
+            headers = []
 
         self.setColumnCount(len(headers))
-        self.setHeaderLabels(list(translate_dict.values()))
+        # self.setHeaderLabels(list(translate_dict.values()))
+        self.setHeaderLabels(headers)
         for item in data:
             str_arr_to_place = []
             idx_for_tables = []
@@ -135,11 +144,11 @@ class ListTreeWidget_1(QTreeWidget):
                     str_arr_to_place.append(str(el))
                     continue
                 if isinstance(el, dict):
-                    str_arr_to_place.append(el['norm_name'])
+                    str_arr_to_place.append(el[self.get_alias_by_key('norm_name')])
                     idx_for_tables.append(counter)
                     continue
                 str_arr_to_place.append(el)
-            self.items.append(ListTreeWidget_1_Item(self, str_arr_to_place, data=item, table_icon=self.table_icon))
+            self.items.append(ListTreeWidget_1_Item(self, str_arr_to_place, data=item, table_icon=self.table_icon, get_alias_by_key=self.get_alias_by_key))
             # self.items.append(SearchResultsTreeItem(self, {'value_list': str_arr_to_place, 'data': item, 'icon_for_tables': self.table_icon}))
             for i in idx_for_tables:
                 self.items[-1].setIcon(i, self.table_icon)

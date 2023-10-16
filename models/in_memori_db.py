@@ -1,7 +1,7 @@
 import os
 
 from domain.db_interface import DbInterface
-from models.in_memory_db_helpers import PIVOT_FIELD_DICTIONARY, generate_pivot_61
+from models.in_memory_db_helpers import PIVOT_FIELD_DICTIONARY, generate_pivot_61, NORM_FIELD_DICTIONARY
 
 
 class InMemoryDB(DbInterface):
@@ -18,7 +18,19 @@ class InMemoryDB(DbInterface):
         self.write(generate_pivot_61(os.path.join(tmp_dir_path,
                                                   'pivot_records.csv')))
 
-    def get_headers(self) -> list[str]:
+    def get_alias(self, key: str) -> str:
+        if key in NORM_FIELD_DICTIONARY:
+            return key
+        if key in NORM_FIELD_DICTIONARY.values():
+            found_key = None
+            for _, value in NORM_FIELD_DICTIONARY.items():
+                if value == key:
+                    found_key = value
+                    break
+            return found_key
+        return 'none'
+
+    def get_headers(self, table_name: str) -> list[str]:
         rez = []
         for fld in self.FIELDS:
             if fld in self.key_field_dict.keys():

@@ -39,5 +39,5 @@ class OpenDBFileWindow(QFileDialog):
             self.interactor.UsersLogger('Неподдерживаемый формат базы. Файл должен быть формата ".{}"'.format(required_extension), 'error')
             return
 
-        # self.interactor.WorkingRepository = SqliteDatabase(filename)
-        self.interactor.WorkingRepository = InMemoryDB(tmp_dir_path=self.interactor.paths.abs_temporary_files_dir) # TODO implement repo - inject dependency
+        self.interactor.WorkingRepository = SqliteDatabase(filename)
+        # self.interactor.WorkingRepository = InMemoryDB(tmp_dir_path=self.interactor.paths.abs_temporary_files_dir) # TODO implement repo - inject dependency
