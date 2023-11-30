@@ -15,13 +15,14 @@ from widgets.main_table_widget import MainTableWidget
 from widgets.norm_template_provider import NormTemplateProviderStartWindow
 from widgets.status_bar import StatusBar
 from widgets.toolbar import Toolbar
+from widgets.fuel_administration.window import FuelAdmin
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self, interactor: INTERACTOR):
         super(MainWindow, self).__init__()
-        
+
         self.interactor = interactor
 
         #  widgets:
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
 
         self.LOGGER.log('База ГСМ v 0.1.1')
         self.show()
-        
+
     def setup_ui(self):
         """
         Настраивает основное окно программы
@@ -95,7 +96,7 @@ class MainWindow(QMainWindow):
         # Модули
         self.TOOLBAR.add_group("Модули")
 
-        self.TOOLBAR.add_item(lambda: print("[ running Назначение file script ]\t{ not implemented }"),
+        self.TOOLBAR.add_item(self._fuel_admin,
                               "Модули",
                               QIcon(os.path.join(self.interactor.paths.abs_icons_dir, 'target_32.png')),
                               'Назначение')
@@ -139,7 +140,6 @@ class MainWindow(QMainWindow):
         make_menu = self.MENU_BAR.addMenu("Создание")
         export_menu = self.MENU_BAR.addMenu("Внешние данные")
 
-
     def _SetRightDockArea(self):
         self.RIGHT_DOCK_AREA = QDockWidget()
 
@@ -148,7 +148,6 @@ class MainWindow(QMainWindow):
         self.RIGHT_DOCK_AREA.setTitleBarWidget(QWidget(None))
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.RIGHT_DOCK_AREA)
         self.RIGHT_DOCK_AREA.hide()
-
 
     def _SetLeftDockArea(self):
         self.LEFT_DOCK_AREA = QDockWidget()
@@ -196,7 +195,7 @@ class MainWindow(QMainWindow):
             ico_db_connected_path=os.path.join(self.interactor.paths.abs_icons_dir, 'db_ok_24.png'),
             ico_db_disconnected_path=os.path.join(self.interactor.paths.abs_icons_dir, 'db_notok_24.png'))
         self.setStatusBar(self.STATUS_BAR)
-        
+
     def _open_db(self):
         OpenDBFileWindow(self.interactor)
 
@@ -228,3 +227,7 @@ class MainWindow(QMainWindow):
         self.RIGHT_DOCK_AREA.show()
         # self._SetRightDockArea(self.WINDOW_NORMALIZATION_MODUL)
         # self.CENTRAL_TABLE_WIDGET.add_tab(self.WINDOW_NORMALIZATION_MODUL, 'Нормирование')
+
+    def _fuel_admin(self):
+        self.FUEL_ADMIN_WINDOW = FuelAdmin()
+        self.FUEL_ADMIN_WINDOW.show()

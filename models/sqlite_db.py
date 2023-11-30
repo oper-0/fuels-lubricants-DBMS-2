@@ -53,9 +53,6 @@ class SqliteDatabase(DbInterface):
             self.cur.execute(query)
             headers += [description[0] for description in self.cur.description]
 
-        # query = "SELECT * from {}".format(tbl)
-        # self.cur.execute(query)
-        # headers += [description[0] for description in self.cur.description]
 
         headers_aliases = []
         als = self.key_field_dict.keys()
@@ -113,13 +110,18 @@ class SqliteDatabase(DbInterface):
         else:
             return []
 
-        # ands = ["'{}' = {} AND".format(item[0], item[1]) for item in filters.items()]
         ands = ["{} = '{}' AND".format(item[0], item[1]) if isinstance(item[1], str) else "'{}' = {} AND".format(item[0], item[1]) for item in filters.items()]
         ands = ' '.join(ands)
         ands = ands[:-3]
         queue = "SELECT * FROM {} WHERE {}".format(SQLITE_TABLES.UNITS, ands)
         self.cur.execute(queue)
         rez = self.cur.fetchall()
+
+        # rez [7, 8, 9] -> NormEntry -> [table_name, row] -> table_name(row) -> zip{header: row}
+        tmp = list(rez[0])# TODO DELETE ME
+        tmp[7] = {"norm_name": "aleykum", "brbrbr": "frfrfr"}# TODO DELETE ME
+        tmp = tuple(tmp)
+        rez[0]= tmp# TODO DELETE ME
 
         # magic code. do not touch:
         headers = self.get_headers()
@@ -142,11 +144,17 @@ class SqliteDatabase(DbInterface):
         unit_category_name = 'Изделия'
         result[unit_category_name] = SQLITE_TABLES.UNITS
 
-
         # Нормы:
         norms_categy_name = 'Нормы'
-        norms = []
+        norms = self.get_norms_data()
         result[norms_categy_name] = norms
 
-
         return result
+
+    def get_norms_data(self):
+        # query = "SELECT * FROM Нормы"
+        # self.cur.execute(query)
+        # norms = self.cur.fetchall()
+        # return norms
+        return {'Изделия': 'Unit', 'Нормы': 'test_caption',
+                'Техника': 'техника'}

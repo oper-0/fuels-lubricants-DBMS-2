@@ -3,7 +3,7 @@ from enum import Enum
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon, QFont
-from PyQt6.QtWidgets import QToolBar,QWidget,  QVBoxLayout, \
+from PyQt6.QtWidgets import QToolBar, QWidget, QVBoxLayout, \
     QGridLayout, QLabel
 
 
@@ -26,7 +26,7 @@ class ToolbarGroup_Item(QWidget):
 
         self.pm_label = QLabel()
         # self.pm_label.setPixmap(ico.pixmap(QSize(24,24)))
-        self.pm_label.setPixmap(ico.pixmap(QSize(32,32)))
+        self.pm_label.setPixmap(ico.pixmap(QSize(32, 32)))
 
         # self.standart_color = Qt.
         self.setAutoFillBackground(True)
@@ -37,14 +37,14 @@ class ToolbarGroup_Item(QWidget):
 
         # test
         # self.setMinimumSize(32,32)
-        self.setMinimumSize(48,48)
+        self.setMinimumSize(48, 48)
         # self.setMinimumSize(90,90)
 
         # self.pm_label.setStyleSheet("border: 1px solid red; background-color: lightgreen")
         self.pm_label.setStyleSheet("QLabel:hover{ 1px solid red; background-color: lightgreen}")
 
-        self.setContentsMargins(0, 0, 0, 0,)
-        layout.setContentsMargins(0,0,0,0)
+        self.setContentsMargins(0, 0, 0, 0, )
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         self.pm_label.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter)
 
@@ -58,7 +58,6 @@ class ToolbarGroup_Item(QWidget):
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.GlobalColor.lightGray)
         self.setPalette(p)
-
 
     def mouseReleaseEvent(self, e):
         p = self.palette()
@@ -82,7 +81,7 @@ class ToolbarGroup(QWidget):
         self.maxRows = 1
         self.maxCols = 4
 
-        self.setContentsMargins(0,0,0,0)
+        self.setContentsMargins(0, 0, 0, 0)
 
         # self.actions: list[QAction] = []
 
@@ -102,14 +101,15 @@ class ToolbarGroup(QWidget):
         new_item = ToolbarGroup_Item(f, ico, description)
         self.layout.addWidget(new_item, self.current_row, self.current_col)
 
-        self.current_col +=1
+        self.current_col += 1
 
-        if self.current_row>self.maxRows-1:
-            raise Exception('Group {} are overflowed. Only {} elements is permitted.'.format(self.title, self.maxCols*self.maxRows))
+        if self.current_row > self.maxRows - 1:
+            raise Exception('Group {} are overflowed. Only {} elements is permitted.'.format(self.title,
+                                                                                             self.maxCols * self.maxRows))
 
-        if self.current_col>self.maxCols-1:
-            self.current_row+=1
-            self.current_col=0
+        if self.current_col > self.maxCols - 1:
+            self.current_row += 1
+            self.current_col = 0
 
 
 class Toolbar(QToolBar):
@@ -119,7 +119,7 @@ class Toolbar(QToolBar):
         self.default_ico = default_ico
         print(os.getcwd())
 
-        self.groups:  list[ToolbarGroup] = []
+        self.groups: list[ToolbarGroup] = []
 
     def add_group(self, title: str):
         group = ToolbarGroup(title)
@@ -127,7 +127,7 @@ class Toolbar(QToolBar):
         self.addWidget(group)
         self.addSeparator()
 
-    def add_item(self, f, group_title: str, ico: QIcon = None, description : str = 'No description provided'):
+    def add_item(self, f, group_title: str, ico: QIcon = None, description: str = 'No description provided'):
         """
         f: closure function to invoke when toolbar widget is triggered
         """
@@ -139,5 +139,5 @@ class Toolbar(QToolBar):
 
     def _get_group_by_title(self, title: str):
         for g in self.groups:
-            if g.title==title:
+            if g.title == title:
                 return g
