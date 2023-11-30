@@ -160,7 +160,7 @@ def str_time_prop(start, end, time_format, prop):
 
 
 def random_date(start, end, prop):
-    return str_time_prop(start, end, '%d/%m/%Y', prop)
+    return str_time_prop(start, end, '%Y-%m-%d', prop)
 
 
 # print(random_date("1/1/2008", "1/1/2009", random.random()))
@@ -194,34 +194,34 @@ def generate_pivot_61(path: str = r'pivot_records.csv') -> list[dict]:
                 line_count += 1
             else:
                 # unitFuelConsumption
-                ufc_created_date = random_date("01/04/2021", "01/04/2023", random.random())
+                ufc_created_date = random_date("2021-04-01", "2023-04-01", random.random())
                 # ufc_created_date = ufc_created_date[0]
                 ufc_validity_duration = random.choice([5, 12, 36, 60])
                 ufc_validity_duration_unit = 'мес.'
                 # ufc_expiring_date = datetime.datetime.strptime(ufc_created_date, "%d/%m/%Y").date()+relativedelta(months=ufc_validity_duration)               # vehicleFuelConsumption
-                ufc_expiring_date = add_months(datetime.datetime.strptime(ufc_created_date, "%d/%m/%Y").date(),
+                ufc_expiring_date = add_months(datetime.datetime.strptime(ufc_created_date, "%Y-%m-%d").date(),
                                                ufc_validity_duration)
-                ufc_expiring_date = ufc_expiring_date.strftime('%d/%m/%Y')
+                ufc_expiring_date = ufc_expiring_date.strftime('%Y-%m-%d')
 
                 # vehicleFuelConsumption
-                vfc_created_date = random_date("01/04/2021", "01/04/2023", random.random()),
+                vfc_created_date = random_date("2021-04-01", "2023-04-01", random.random()),
                 vfc_created_date = vfc_created_date[0]
                 vfc_validity_duration = random.choice([5, 12, 36, 60])
                 vfc_validity_duration_unit = 'мес.'
                 # vfc_expiring_date = datetime.datetime.strptime(vfc_created_date, "%d/%m/%Y").date() + relativedelta(months=vfc_validity_duration)  # vehicleFuelConsumption
-                vfc_expiring_date = add_months(datetime.datetime.strptime(vfc_created_date, "%d/%m/%Y").date(),
+                vfc_expiring_date = add_months(datetime.datetime.strptime(vfc_created_date, "%Y-%m-%d").date(),
                                                vfc_validity_duration)
-                vfc_expiring_date = vfc_expiring_date.strftime('%d/%m/%Y')
+                vfc_expiring_date = vfc_expiring_date.strftime('%Y-%m-%d')
 
                 # specialEquipmentFuelConsumption
-                sfc_created_date = random_date("01/04/2021", "01/04/2023", random.random()),
+                sfc_created_date = random_date("2021-04-01", "2023-04-01", random.random()),
                 sfc_created_date = sfc_created_date[0]
                 sfc_validity_duration = random.choice([5, 12, 36, 60])
                 sfc_validity_duration_unit = 'мес.'
                 # sfcufc_expiring_date = datetime.datetime.strptime(ufc_created_date, "%d/%m/%Y").date() + relativedelta(months=ufc_validity_duration)  # vehicleFuelConsumption
-                sfc_expiring_date = add_months(datetime.datetime.strptime(sfc_created_date, "%d/%m/%Y").date(),
+                sfc_expiring_date = add_months(datetime.datetime.strptime(sfc_created_date, "%Y-%m-%d").date(),
                                                sfc_validity_duration)
-                sfc_expiring_date = sfc_expiring_date.strftime('%d/%m/%Y')
+                sfc_expiring_date = sfc_expiring_date.strftime('%Y-%m-%d')
 
 
                 cur_record = {

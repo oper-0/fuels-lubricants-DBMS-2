@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import QDialog, QComboBox, QLineEdit, QFormLayout, QPushBut
 
 from domain.db_interface import DbInterface
 from models.in_memori_db import InMemoryDB
+from models.sqlite_db import SQLITE_TABLES
 from widgets.line_edit import ClickableLineEdit
 from widgets.list_tree_widget import ListTreeWidget_1
 
@@ -30,7 +31,7 @@ class DbBrowser(QDialog):
         self.combos: list[QComboBox] = []
         self.edits: list[ClickableLineEdit] = []
         self.filter_form = QFormLayout()
-        self.field_list = self.db.get_headers()
+        self.field_list = self.db.get_headers(SQLITE_TABLES.UNITS)
 
         self.completers: dict[str: QCompleter] = {} # field_rus: completer
         # self.word_list = []
@@ -81,7 +82,7 @@ class DbBrowser(QDialog):
         self.add_field()
         self.render_filter_form()
 
-        self.search_results_tree = ListTreeWidget_1(self.icons_dir)
+        self.search_results_tree = ListTreeWidget_1(self.icons_dir, self.db.get_alias)
 
         # Custom spacer
         # self.Hspacer = QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -107,31 +108,16 @@ class DbBrowser(QDialog):
         self.feedback_label.clear()
 
     def search(self):
-        # searching_fields_and_vals = {}
         searching_keys_and_vals = {}
-        # key, field = [], []
-        # for i in range(len(self.combos)):
-        #     field = self.combos[i].currentText()
-        #     # key = self.db.dataModel.PIVOT_FIELD_DICTIONARY[self.field_list[self.combos[i].currentIndex()]]
-        #     key = self.db.key_field_dict.keys
-        #     # key = self.db.
-        #     val = self.edits[i].text()
-        #     print('field: {}; key: {}; val: {}'.format(field, key, val))
-        #     # searching_fields_and_vals[field] = val
-        #     searching_keys_and_vals[key] = val
-        # print(searching_keys_and_vals)
         for i in range(len(self.combos)):
             field = self.combos[i].currentText()
             key = self.db.key_field_dict
             val = self.edits[i].text()
             print('field: {}; key: {}; vak: {}'.format(field, key, val))
 
-
-
         for i in range(len(self.combos)):
             searching_keys_and_vals[self.combos[i].currentText()] = self.edits[i].text()
 
-        # self.search_results = self.db.dataModel.find(searching_keys_and_vals)
         self.search_results = self.db.find(searching_keys_and_vals)
         if self.search_results == []:
             print('[INFO] empty result')
@@ -163,8 +149,6 @@ class DbBrowser(QDialog):
             edit.setCompleter(completer)
 
         return edit_click_handler
-
-
 
     def add_field(self):
 
