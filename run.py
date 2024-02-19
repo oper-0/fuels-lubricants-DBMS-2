@@ -7,7 +7,7 @@ from domain.interactor import INTERACTOR
 from domain.path_keeper import PathKeeper
 from infrastructure.load_win import LoadWin
 from widgets.main_window import MainWindow
-from models.sqlite_db import SqliteDatabase
+
 
 def load_app():
     cwd = os.getcwd()
